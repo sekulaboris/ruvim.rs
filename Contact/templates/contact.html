@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Contact</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'contact.css' %}">
+    </head>
+    <body>
+        
+        {% block content %}
+            <h1>Kontaktirajte nas!</h1>
+            <p style="font-style: italic;font-weight: 200;color: grey;font-family: 'Times New Roman', Times, serif;margin: 60px 0 60px 0;">
+                Boris Sekulić</br>
+                Dragutina Matića 28</br>
+                Bačka Topola 24300</br>
+                Kontakt: 0638856692</br>
+
+            </p>
+            <form action="" method="post" style="font-family: 'Times New Roman', Times, serif;color: grey;" >
+                <input type="hidden" name="csrfmiddlewaretoken" value="yTF5g7ceTgkwsOimKxZpuV10DG4a1TWFwQ60pneu047lPvu6kTAlNYPfYEC9G8jqg">
+                <tr>
+                    <th>
+                        <label for="id_email">Email:</label>
+                    </th>
+                    <td>
+                        <input type="email" name="email" maxlength="254" required id="id_email">
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="id_subject">Subject:</label>
+                    </th>
+                    <td>
+                        <input type="text" name="subject" maxlength="255" required id="id_subject">
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="id_message">Message:</label>
+                    </th>
+                    <td>
+                        <textarea name="message" cols="40" rows="10" required id="id_message"></textarea>
+                    </td>
+                </tr>
+                {% csrf_token %}
+                
+                <input type="submit" value="Submit">
+            </form>
+        {% endblock %}
+    </body>
+
+</html>

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+    Welcome!
+{% endblock %}
+
+
+{% block content %}
+    <h1>Welcome {{ request.new_user.first_name }}!</h1>
+    <p>Your account has been successfully created. Now you can <a href="{% url 'account:login_user' %}">Log in</a></p>
+</br>
+    <div>
+        <p style="float: left;"><a href="{% url 'account:password_change' %}">Change your password.</a></p>
+    </div>
+{% endblock %}
+    
+    

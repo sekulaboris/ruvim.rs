@@ -1,0 +1,222 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}
+        Order {{ Order.first_name }}
+    {% endblock%}</title>
+</head>
+<style>
+    body {
+        position:absolute;
+        align-content: center;
+        margin: 10px 10px 10px 10px;
+        width:190mm;
+        height:280mm;
+        
+
+    }
+    .prodavac {
+        position: absolute;
+        font-size: 12px;
+        float: left;
+        margin: 0px 0px 0 0px;
+        
+    }
+    #print {
+        position:absolute;
+        
+    }
+    h1 {
+        width: 180mm;
+        background-color:cyan;
+        padding: 0px 0px 0px 0px;
+        font-size: 20px;
+    }
+    .porucilac {
+        float: left;
+        position: absolute;
+        right: 0px;
+        background-color:none;
+        border: 1px solid black;
+        font-size: 12px;
+        
+    }
+    .racun {
+        position: absolute;
+        float: left;
+        margin-top: 0px;
+    }
+    .proizvodi {
+        position: absolute;
+        float: left;
+        width: 170mm;
+        font-size: 10px;
+        margin-top: 0px;
+        border: 0px solid black;
+    }
+    .proizvodi thead {
+        text-align: left;
+        
+    }
+    .proizvodi thead tr th {
+        border: 1px solid black;
+    }
+    .proizvodi tbody td {
+        border-left: 1px solid black;
+        border-bottom: 1px solid black;
+    }
+        
+
+    
+
+    /* @media print {
+        body *{
+            visibility: hidden;
+        }
+        body * {
+            visibility: hidden !important;
+        }
+        #print-part, print-part * {
+            visibility: visible !important;
+        }
+        
+    } */
+</style>
+
+<body>
+    {% block breadcrumbs %}
+    <div class="breadcrumbs">
+        
+    </div> 
+{% endblock %}
+{% block content %}
+        <div id="print" >
+            <br>
+            <h1>Zahvaljujemo se što ste poručili proizvode sa našeg sajta.
+                Vaša porudžba je broj: {{ order.id }}/2023</h1>
+            <table class="prodavac">
+                <tr>
+                    <th>Firma</th>
+                    <td>"Ruvim"</td>
+                </tr>
+                <tr>
+                    <th>Adresa</th>
+                    <td>Dragutina Matića 28</td>
+                </tr>
+                <tr>
+                    <th>Mesto i Država</th>
+                    <td>Bačka Topola 24300, Srbija</td>
+                </tr>
+                <tr>
+                    <th>M.br.:</th>
+                    <td>63181366</td>
+                </tr>
+                <tr>
+                    <th>PIB</th>
+                    <td>108058001</td>
+                </tr>
+                <tr>
+                    <th>Banca Intesa</th>
+                    <td>xxx-xxxxxx-xx</td>
+                </tr>
+                <tr>
+                    <th>Kontakt</th>
+                    <td>Boris Sekulić 0638856692</td>
+                </tr>
+                <tr>
+                    <th>E-mail & Web</th>
+                    <td>sekulaboris@yahoo.com | www.ruvim.rs</td>
+                </tr>
+            </table>
+            
+            <table  class="porucilac">
+                <tr>
+                    <th>Kreirano</th>
+                    <td>{{ order.created }}</td>
+                </tr>
+                <tr>
+                    <th>Kupac</th>
+                    <td>{{ order.first_name }}{{ order.last_name }}</td>
+                </tr>
+                <tr>
+                    <th>E-mail</th>
+                    <td><a href="mailto:{{ order.email }}">{{ order.email }}</a></td>
+                </tr>
+                <tr>
+                    <th>Adresa</th>
+                    <td>{{ order.address }}, {{ order.postal_code }} {{ order.city }}</td>
+                </tr>
+                <tr>
+                    <th>Ukupno za uplatu</th>
+                    <td>{{ order.get_total_cost }} dinara.</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>{% if order.paid %}Paid{% else %}Pending payment{% endif %}</td>
+                </tr>
+            </table><br><br><br><br><br><br><br><br><br>
+
+            <div class="racun">
+                <h2>Račun otpremnica broj {{ order.id }}/2023</h2>
+                <table class="proizvodi">
+                    
+                    <thead>
+                        <tr>
+                            <th>Proizvod</th>
+                            <th>Cena po j.m.</th>
+                            <th>Količina</th>
+                            <th>Osnovica</th>
+                            <th>Iznos PDV-a</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items.all %}
+                            <tr class="row{% cycle '1' '2' %}">
+                                <td>{{ item.product.name }}</td>
+                                <td class="num">{{ item.price }} din.</td>
+                                <td class="num">{{ item.quantity }} kom.</td>
+                                <td class="num">{{ item.get_cost }} din.</td>
+                                <td class="num">{{ item.get_pdv }} din.</td>
+                                <td class="num">{{ item.get_cost }} din.</td>
+                            </tr>
+                        {% endfor %}
+                        <br>
+                        <tr class="total">
+                            <td colspan="3" style="font-weight: bold;">Ukupno za uplatu sa pdv-om. = {{ order.get_total_cost }} dinara.</td>
+                            
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+           
+            
+        </div>
+        <div><span class="{% if order.paid %}paid{% else %}pending{% endif %}">
+                {% if order.paid %}Paid{% else %}Nakon uplate možete očekivati svoju robu!{% endif %}
+            </span>
+        </div>
+        <button id="print" onclick="print()">Štampaj</button>
+{% endblock %}
+    <!--<script>
+        function print_part (){
+            const printButton = document.getElementsById(print);
+
+           printButton.addEventListener('click', function(){
+                                    print();})
+           }
+    </script> --> 
+
+
+            
+</body>
+</html>
+
+
+

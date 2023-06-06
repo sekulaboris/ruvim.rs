@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>List_onlineshop</title>
+        {% block title %}
+            {% if category %}
+                {{ category.name }}
+            {% else %}
+                Products
+            {% endif %}
+        {% endblock %}
+
+        <link rel="stylesheet" type="text/css" href="{% static 'css/onlineshop.css' %}">
+    </head>
+    <body>
+        
+        {% block content %}
+           
+            <div id="main" class="product-list">
+                <h1>
+                    {% if category %}
+                        {{ category.name }}
+                    {% else %}
+                        Products
+                    {% endif %}
+                </h1>
+                {% for product in products %}
+                    <div class="item">
+                        <ul style="float: left;margin-top: 30px;";>
+                            <li style="display: inline-block;width: 200px;height: 100px;">
+                            <a href="{{ product.get_absolute_url }}">
+                                <img style="width: 200px;height: 150px;" src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.jpg' %}{% endif %}">
+                            </a>
+                            <br>
+                            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                            <br>
+                            {{ product.price }}dinara.
+                            </li>
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+           
+        {% endblock %}
+        {% block sidebar %}
+        <div id="sidebar">
+            <div class="empty">
+                {% with total_items=cart|length %}
+                    {% if total_items > 0 %}
+                        Your Cart:
+                        <a href="{% url 'cart:cart_detail' %}">
+                            {{ total_items }} item{{ total_items|pluralize }},
+                            {{ cart.get_total_price|floatformat:2 }} dinara.
+                        </a>
+                    {% else %}
+                        Your Cart is Empty!
+                    {% endif %}
+                {% endwith %}
+            </div>
+            <h3>Categories</h3>
+            <ul>
+                <li {% if not category %} class="selected" {% endif %}>
+                    <a href="{% url 'OnlineShop:product_list' %}">All</a>
+                </li>
+                {% for c in categories %}
+                    <li {% if category.slug == c.slug %} class="selected"
+                        {% endif %}>
+                        <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endblock %}
+    </body>
+
+</html>

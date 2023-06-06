@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+    Create an account
+{% endblock %}
+
+
+{% block content %}
+    <h1>Create an account.</h1>
+    <div style="float:left; width: 800px;">
+        <p>Please, sign up using the following form:</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ user_form.as_p }}
+            <p>
+                <input type="submit" value="Create my account">
+            </p>
+           
+        </form>
+    </div>
+</br>
+    <div>
+        <p style="float: left;"><a href="{% url 'account:password_change' %}">Change your password.</a></p>
+    </div>
+{% endblock %}
+    
+    

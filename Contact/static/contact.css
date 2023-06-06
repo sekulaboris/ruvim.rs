@@ -1,0 +1,6 @@
+input[type=text], input[type=email], textarea {
+    width: 1200 px;
+    padding: 12px 20px;
+    margin: 30px 30px;
+    display: inline-block;
+   }

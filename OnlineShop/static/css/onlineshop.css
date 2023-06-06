@@ -1,0 +1,15 @@
+ul {
+    display: inline-block;
+    width: 50px;
+}
+
+li {
+    padding: 0 0 0 0;
+   
+    
+}
+.product-detail {
+    width: 200px;
+    height: auto;
+
+}

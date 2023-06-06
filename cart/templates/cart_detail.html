@@ -1,0 +1,78 @@
+{% extends 'list_onlineshop.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Your shoping cart!</title>
+        {% block title %}Your shopping cart!{% endblock %}
+    </head>
+    
+    <body>
+       
+        {% block content %}
+           <h1>Your shopping cart</h1>
+           <table class="table">
+                <thead>
+                    <tr>
+                        <th>Slika proizvoda</th>
+                        <th>Naziv proizvoda</th>
+                        <th>Količina</th>
+                        <th>Izbaci proizvod</th>
+                        <th>Jedinicna cena</th>
+                        <th>Osnovica</th>
+                        <th>Pdv</th>
+                    </tr>
+                </thead>
+             
+                <tbody>
+                    {% for item in cart %}
+                        {% with product=item.product %}
+                            <tr>
+                                <td>
+                                    <a href="{{ product.get_absolute_url }}">
+                                        <img src="{% if product.image %}{{ product.image.url }}
+                                        {% else %}{% static 'img/no_image.jpg' %}{% endif %}" style="width: 100px;height: 50px;">
+                                    </a>
+                                </td>
+                                <td>{{ product.name }}</td>
+                                <td>
+                                    <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                                        {{ item.update_quantity_form.quantity }}  
+                                        {{ item.update_quantity_form.override }}
+                                        <input type="submit" class="form-control" value="Update" >
+                                       
+                                        {% csrf_token %}
+                                    </form>
+                                </td>
+                                <td>
+                                    <form action="{% url 'cart:cart_remove' product.id %}" method="post">
+                                        <input type="submit" class="form-control" value="Remove">
+                                        {% csrf_token %} 
+                                    </form>
+                                </td>
+                                <td class="num">{{ item.price }} din.</td>
+                                <td class="num">{{ item.osnovica }} din.</td> 
+                                <td class="num">{{ item.pdv|floatformat:2 }} din.</td>  
+                            </tr>
+                        {% endwith %}
+                    {% endfor %}
+                            <tr>
+                                <td>Ukupna cena sa pdv-om.</td>
+                                <td colspan="4"></td>
+                                <td class="num">{{ cart.get_total_price|floatformat:2 }}</td>
+                            </tr>
+                </tbody>
+           </table></br>
+           <p class="text-right">
+                <a href="{% url 'onlineshop:product_list' %}" class="buttonlight">
+                    <input type="submit" class="form-control" value="Nastavi kupovinu!"/>
+                </a></br>
+                <a href="{% url 'orders:order_create' %}" class="button">
+                    <input type="submit" class="form-control" value="Checkout"/>
+                </a>
+           </p>
+           
+        {% endblock %}
+    </body>
+
+</html>
